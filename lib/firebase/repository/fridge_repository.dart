@@ -66,15 +66,15 @@ class FridgeRepository {
     await fridgesRef!.doc(fridgeID).update({'manager': manager});
   }
 
-  Future<void> addUsers(String fridgeID, String userID) async {
+  Future<void> addUsers(String fridgeID, String uid) async {
     await fridgesRef!.doc(fridgeID).update({
-      'users': FieldValue.arrayUnion([userID])
+      'users': FieldValue.arrayUnion([uid])
     });
   }
 
-  Future<void> deleteUsers(String fridgeID, String userID) async {
+  Future<void> deleteUsers(String fridgeID, String uid) async {
     await fridgesRef!.doc(fridgeID).update({
-      'users': FieldValue.arrayRemove([userID])
+      'users': FieldValue.arrayRemove([uid])
     });
   }
 
