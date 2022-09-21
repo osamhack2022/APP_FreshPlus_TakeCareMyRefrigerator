@@ -28,14 +28,14 @@ class UserBoxRepository {
     if(userBoxesRef==null) throw UserBoxRepositoryException("null-userBoxes")
   }
   Future<void> addUserBox(UserBox userBox) async{
-    DocumentSnapshot userBoxSnapShot =
+    DocumentSnapshot userBoxSnapshot =
         await userBoxesRef!.doc(userBox.uid).get();
     var userBoxDoc = {
       'uid':userBox.uid,
       'itemNum':userBox.itemNum,
       'items':userBox.items
     };
-    if (userBoxSnapShot.exists == true) {
+    if (userBoxSnapshot.exists == true) {
       throw UserBoxRepositoryException('already-exist');
     } else {
       await userBoxesRef!.doc(userBox.uid).set(userBoxDoc);
