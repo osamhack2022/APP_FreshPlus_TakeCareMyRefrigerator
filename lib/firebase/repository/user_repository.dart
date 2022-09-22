@@ -85,7 +85,7 @@ class UserRepository {
       throw UserRepositoryException('no-email');
   }
 
-  void editUser(User user) async {
+  Future<void> editUser(User user) async {
     var user_doc = {
       'uid': user.uid,
       'email': user.email,
@@ -140,6 +140,9 @@ class UserRepository {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      if (credential.user == null)
+        throw (UserRepositoryException('fail-login'));
+      print(credential.user!.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw UserRepositoryException('no-user');
@@ -155,6 +158,7 @@ class UserRepository {
 
   Future<void> requestLogOut() async {
     await FirebaseAuth.instance.signOut();
+    print("Successfully logout");
   }
 
   Future<void> requestPasswordReset(String email) async {

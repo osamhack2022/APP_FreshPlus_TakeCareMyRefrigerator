@@ -21,7 +21,7 @@ class UnitRepository {
       'unitName' : unit.unitName,
       'fridges' : unit.fridges,
       'master' :unit.master,
-    }
+    };
     if(unitSnapShot.exists == true){
       throw UnitRepositoryException('already-exist');
     }

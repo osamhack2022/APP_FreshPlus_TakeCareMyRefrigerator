@@ -58,7 +58,7 @@ class FridgeRepository {
   }
 
   Future<void> editItemNum(String fridgeID, int num) async {
-    int numPast = (await fridgesRef!.doc(fridgeID).get()).data().get('itemNum');
+    int numPast = (await fridgesRef!.doc(fridgeID).get()).get('itemNum');
     await fridgesRef!.doc(fridgeID).update({'itemNum': (numPast + num)});
   }
 

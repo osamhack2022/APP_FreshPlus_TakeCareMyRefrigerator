@@ -25,7 +25,7 @@ class UserBoxRepository {
         .collection('fridges')
         .doc(fridgeID)
         .collection('userBoxes');
-    if(userBoxesRef==null) throw UserBoxRepositoryException("null-userBoxes")
+    if(userBoxesRef==null) throw UserBoxRepositoryException("null-userBoxes");
   }
   Future<void> addUserBox(UserBox userBox) async{
     DocumentSnapshot userBoxSnapshot =
@@ -71,6 +71,6 @@ class UserBoxRepository {
         userBoxSnapshot.get('uid'),
         userBoxSnapshot.get('itemNum'),
         userBoxSnapshot.get('items')
-      )
+      );
   }
 }

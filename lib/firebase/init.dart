@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 
-void initialize() async {
+Future<void> initialize() async {
   await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: "AIzaSyCb7dzWlfrFOELNCYKaYwVQm-APYtNt3ws",
