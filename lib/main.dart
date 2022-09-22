@@ -1,48 +1,40 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'components/custom_form.dart';
-import 'components/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'components/pages/intro_splash.dart';
-import 'components/init.dart';
-import 'package:logger/logger.dart';
 
-var logger = Logger(
-  printer: PrettyPrinter(),
-);
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initialize();
-  runApp(const MaterialApp(
-    home: IntroSplash(),
-  ));
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: "Roboto"),
+      // Application name
+      title: 'Flutter Hello World',
+      // Application theme data, you can set the colors for the application as
+      // you want
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // A widget which will be started on application startup
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MainPage extends StatelessWidget {
+class MyHomePage extends StatelessWidget {
+  final String title;
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return LoginPage();
-          } else {
-            CustomForm();
-          }
-          return CustomForm();
-        },
+      appBar: AppBar(
+        // The title text which will be shown on the action bar
+        title: Text(title),
+      ),
+      body: Center(
+        child: Text(
+          'Hello, World!',
+        ),
       ),
     );
   }
