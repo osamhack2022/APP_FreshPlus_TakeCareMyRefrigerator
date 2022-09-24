@@ -85,7 +85,7 @@ class UnitRepository {
                                     .get();
     return Unit(unitSnapshot.get('unitID'),
       unitSnapshot.get('unitName'),
-      unitSnapshot.get('fridges'),
+      unitSnapshot.get('fridges').cast<String>(), //List requires casting
       unitSnapshot.get('master'));
   }
 }

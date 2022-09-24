@@ -41,7 +41,7 @@ class UserRepository {
     } catch (e) {
       throw UserRepositoryException("unknown-firebase-exception");
     }
-    var user_doc = {
+    var userDoc = {
       'uid': user.uid,
       'email': user.email,
       'serialNum': user.serialNum,
@@ -51,15 +51,15 @@ class UserRepository {
     };
     switch (user.type) {
       case (UserType.master):
-        user_doc['type'] = 'master';
+        userDoc['type'] = 'master';
         break;
       //manager class can be deleted soon, to get info about manager
       //you may use fridge entity
       case (UserType.manager):
-        user_doc['type'] = 'manager';
+        userDoc['type'] = 'manager';
         break;
       case (UserType.user):
-        user_doc['type'] = 'user';
+        userDoc['type'] = 'user';
         break;
     }
 
@@ -67,7 +67,7 @@ class UserRepository {
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid)
-        .set(user_doc);
+        .set(userDoc);
   }
 
   //delete currentUser
@@ -85,40 +85,40 @@ class UserRepository {
       throw UserRepositoryException('no-email');
   }
 
-  Future<void> editUser(User user) async {
-    var user_doc = {
-      'uid': user.uid,
-      'email': user.email,
-      'serialNum': user.serialNum,
-      'userName': user.userName,
-      'unitID': user.unitID,
-      'fridgeID': user.fridgeID
-    };
-    switch (user.type) {
+  Future<void> editUserName(String uid, String name) async{
+    DocumentSnapshot userSnapshot = 
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+    if(userSnapshot.exists==false) throw UserRepositoryException('no-user');
+    await FirebaseFirestore.instance.collection('user').doc(uid).update({
+      'name':name
+    });
+  }
+  Future<void> editUserType(String uid, UserType type) async{
+    String userType;
+    switch (type) {
       case (UserType.master):
-        user_doc['type'] = 'master';
+        userType = 'master';
         break;
-      //manager class can be deleted soon, to get info about manager
-      //you may use fridge entity
       case (UserType.manager):
-        user_doc['type'] = 'manager';
+        userType = 'manager';
         break;
-      case (UserType.user):
-        user_doc['type'] = 'user';
+      default:
+        userType = 'user';
         break;
     }
-    DocumentReference user_doc_past =
-        await FirebaseFirestore.instance.collection('user').doc(user.uid);
-    DocumentSnapshot snapshot = await user_doc_past.get();
-    if (snapshot.exists == false) throw UserRepositoryException("no-user");
-    await user_doc_past.set(user_doc);
+    DocumentSnapshot userSnapshot = 
+        await FirebaseFirestore.instance.collection('user').doc(uid).get();
+    if(userSnapshot.exists==false) throw UserRepositoryException('no-user');
+    await FirebaseFirestore.instance.collection('user').doc(uid).update({
+      'type':userType
+    });
   }
-
+  //double check required?
   Future<User> getUser(String uid) async {
-    DocumentSnapshot user_doc =
+    DocumentSnapshot userDoc =
         await FirebaseFirestore.instance.collection('user').doc(uid).get();
     UserType type_enum = UserType.user;
-    switch (user_doc.get('type')) {
+    switch (userDoc.get('type')) {
       case ("manager"):
         type_enum = UserType.manager;
         break;
@@ -127,23 +127,24 @@ class UserRepository {
         break;
     }
     return User(
-        (user_doc.get('uid')),
-        user_doc.get('email'),
-        user_doc.get('serialNum'),
-        user_doc.get('userName'),
-        user_doc.get('unitID'),
-        user_doc.get('fridgeID'),
+        (userDoc.get('uid')),
+        userDoc.get('email'),
+        userDoc.get('serialNum'),
+        userDoc.get('userName'),
+        userDoc.get('unitID'),
+        userDoc.get('fridgeID'),
         type_enum);
   }
 
-  Future<void> requestLogIn(String email, String password) async {
+  Future<String> requestLogIn(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       if (credential.user == null)
         throw (UserRepositoryException('fail-login'));
-      print(credential.user!.uid);
+      return credential.user!.uid;
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       if (e.code == 'user-not-found') {
         throw UserRepositoryException('no-user');
       } else if (e.code == 'wrong-password') {

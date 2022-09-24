@@ -70,7 +70,7 @@ class UserBoxRepository {
       return UserBox(
         userBoxSnapshot.get('uid'),
         userBoxSnapshot.get('itemNum'),
-        userBoxSnapshot.get('items')
+        userBoxSnapshot.get('items').cast<String>()
       );
   }
 }

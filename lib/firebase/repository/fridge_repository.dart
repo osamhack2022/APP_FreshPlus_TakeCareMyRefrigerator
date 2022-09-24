@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Fridge {
   String fridgeID;
   String fridgeName;
-  String itemNum;
+  int itemNum;
   String manager;
   List<String> users;
   int warningNum;
@@ -49,12 +49,17 @@ class FridgeRepository {
   }
 
   Future<void> deleteFridge(String fridgeID) async {
-    DocumentReference fridgeRef = fridgesRef!.doc(fridgeID);
+    DocumentReference fridgeRef = FirebaseFirestore.instance
+        .collection('unit')
+        .doc(unitID)
+        .collection('fridges').doc(fridgeID);
     fridgeRef.delete();
   }
 
   Future<void> editFridgeName(String fridgeID, String fridgeName) async {
-    await fridgesRef!.doc(fridgeID).update({'fridgeName': fridgeName});
+    await fridgesRef!
+    .doc(fridgeID)
+    .update({"fridgeName": fridgeName});
   }
 
   Future<void> editItemNum(String fridgeID, int num) async {
@@ -88,7 +93,7 @@ class FridgeRepository {
       fridgeSnapshot.get('fridgeName'),
       fridgeSnapshot.get('itemNum'),
       fridgeSnapshot.get('manager'),
-      fridgeSnapshot.get('users'),
+      fridgeSnapshot.get('users').cast<String>(),
       fridgeSnapshot.get('warningNum'),
       fridgeSnapshot.get('trashNum'),
     );

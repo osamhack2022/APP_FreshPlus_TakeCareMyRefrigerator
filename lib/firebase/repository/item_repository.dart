@@ -37,9 +37,8 @@ class ItemRepository{
   }
   Future<void> addItem(Item item) async{
     //itemID자율배정입니다.
-    DocumentSnapshot itemsSnapshot = await itemsRef!.doc(item.itemID).get();
     var itemDoc={
-      'itemID':item.itemID,
+      'itemID':"",
       'itemName':item.itemName,
       'uid':item.uid,
       'inDate':Timestamp.fromDate(item.inDate),
@@ -62,10 +61,9 @@ class ItemRepository{
         itemDoc['itemType']='warning';
         break;  
     }
-    if(itemsSnapshot.exists==true) throw ItemRepositoryException('already-exists');
-    else{
-      await itemsRef!.doc(item.itemID).set(itemDoc);
-    }
+    DocumentReference docRef = await itemsRef!.add(itemDoc);
+    await docRef.update({'itemID':docRef.id});
+    print(docRef.id);
   }
   Future<void> deleteItem(String itemID)async {
     //check it is null?
@@ -113,7 +111,7 @@ class ItemRepository{
         .get();
       if(itemSnapshot.exists==false) throw ItemRepositoryException('no-item');
     DateTime inDate = itemSnapshot.get('inDate').toDate();
-    DateTime dueDate = itemSnapshot.get('inDate').dueDate();
+    DateTime dueDate = itemSnapshot.get('dueDate').toDate();
     ItemType type = ItemType.ok;
     switch(itemSnapshot.get('type')){
       case('ok'):
