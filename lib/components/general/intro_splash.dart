@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../homepage_logo.dart';
+import 'homepage_logo.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'login_page.dart';
+import '../login_page_folder/login_page.dart';
 
 class IntroSplash extends StatefulWidget {
   const IntroSplash({Key? key}) : super(key: key);

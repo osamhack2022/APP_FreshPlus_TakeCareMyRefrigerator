@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../custom_form.dart';
+import 'custom_form.dart';
 import 'package:flutter/material.dart';
-import '../homepage_logo.dart';
+import '../general/homepage_logo.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -43,7 +43,9 @@ class LoginPage extends StatelessWidget {
                                 style: TextButton.styleFrom(
                                   textStyle: const TextStyle(fontSize: 20),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  
+                                },
                                 child: const Text(
                                   '비밀번호 재설정',
                                   style: TextStyle(
