@@ -32,6 +32,7 @@ class _CustomFormState extends State<CustomForm> {
         child: Column(
           children: [
             TextFormField(
+              controller:emailController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return '이메일을 입력하세요';
@@ -81,6 +82,7 @@ class _CustomFormState extends State<CustomForm> {
             ),
             const SizedBox(height: 15.0),
             TextFormField(
+              controller:passwordController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return '비밀번호를 입력하세요';
@@ -136,6 +138,8 @@ class _CustomFormState extends State<CustomForm> {
                   if (_formKey.currentState!.validate()) {
                     try{
                       repo.requestLogIn(emailController.text.trim(),passwordController.text.trim());
+                      print(emailController.text.trim());
+                      print(passwordController.text.trim());
                       print("successed");
                       //Get.offAll(() => const HomePage());
                     } on UserRepositoryException catch(e){
