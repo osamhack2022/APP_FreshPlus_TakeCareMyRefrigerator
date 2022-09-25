@@ -1,7 +1,8 @@
-import '../main.dart';
+import '../../main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '/firebase/repository/user_repository.dart';
 
 class CustomForm extends StatefulWidget {
   const CustomForm({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class _CustomFormState extends State<CustomForm> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final UserRepository repo = UserRepository();
   bool _isObscure = true;
   @override
   void dispose() {
@@ -31,6 +32,7 @@ class _CustomFormState extends State<CustomForm> {
         child: Column(
           children: [
             TextFormField(
+              controller:emailController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return '이메일을 입력하세요';
@@ -80,6 +82,7 @@ class _CustomFormState extends State<CustomForm> {
             ),
             const SizedBox(height: 15.0),
             TextFormField(
+              controller:passwordController,
               validator: (value) {
                 if (value!.isEmpty) {
                   return '비밀번호를 입력하세요';
@@ -132,9 +135,17 @@ class _CustomFormState extends State<CustomForm> {
               width: 250.0,
               child: ElevatedButton(
                 onPressed: () {
-                  /*
-                  you
-                  */ 
+                  if (_formKey.currentState!.validate()) {
+                    try{
+                      repo.requestLogIn(emailController.text.trim(),passwordController.text.trim());
+                      print(emailController.text.trim());
+                      print(passwordController.text.trim());
+                      print("successed");
+                      //Get.offAll(() => const HomePage());
+                    } on UserRepositoryException catch(e){
+                      print(e.code);
+                    }
+                  }
                 },
                 child: const Text(
                   '로그인test',
