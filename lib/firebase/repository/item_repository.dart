@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum ItemType {ok, lost, notFound, warning, trash}
+enum ItemType {ok, lost, noHost, warning, trash}
 
 class Item{
   String itemID;
@@ -51,8 +51,8 @@ class ItemRepository{
       case(ItemType.lost):
         itemDoc['itemType']='lost';
         break;
-      case(ItemType.notFound):
-        itemDoc['itemType']='notFound';
+      case(ItemType.noHost):
+        itemDoc['itemType']='noHost';
         break;
       case(ItemType.trash):
         itemDoc['itemType']='trash';
@@ -92,8 +92,8 @@ class ItemRepository{
       case(ItemType.lost):
         typeStr='lost';
         break;
-      case(ItemType.notFound):
-        typeStr='notFound';
+      case(ItemType.noHost):
+        typeStr='noHost';
         break;
       case(ItemType.trash):
         typeStr='trash';
@@ -114,15 +114,17 @@ class ItemRepository{
     DateTime dueDate = itemSnapshot.get('dueDate').toDate();
     ItemType type = ItemType.ok;
     switch(itemSnapshot.get('type')){
-      case('ok'):
-        break;
       case('lost'):
+        type = ItemType.lost;
         break;
-      case('notFound'):
+      case('noHost'):
+        type = ItemType.noHost;
         break;
       case('trash'):
+        type = ItemType.trash;
         break;
       case('warning'):
+        type = ItemType.warning;
         break;
     }
     return Item(
