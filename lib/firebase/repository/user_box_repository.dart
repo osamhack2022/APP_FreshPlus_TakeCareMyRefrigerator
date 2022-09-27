@@ -4,7 +4,11 @@ class UserBox {
   String uid;
   int itemNum;
   List<String> items;
-  UserBox(this.uid, this.itemNum, this.items);
+  int warningNum;
+  int trashNum;
+  int lostNum;
+  UserBox(this.uid, this.itemNum, this.items, this.warningNum, this.trashNum,
+      this.lostNum);
 }
 
 class UserBoxRepositoryException {
@@ -25,15 +29,20 @@ class UserBoxRepository {
         .collection('fridges')
         .doc(fridgeID)
         .collection('userBoxes');
-    if(userBoxesRef==null) throw UserBoxRepositoryException("null-userBoxes");
+    if (userBoxesRef == null)
+      throw UserBoxRepositoryException("null-userBoxes");
   }
-  Future<void> addUserBox(UserBox userBox) async{
+
+  Future<void> addUserBox(UserBox userBox) async {
     DocumentSnapshot userBoxSnapshot =
         await userBoxesRef!.doc(userBox.uid).get();
     var userBoxDoc = {
-      'uid':userBox.uid,
-      'itemNum':userBox.itemNum,
-      'items':userBox.items
+      'uid': userBox.uid,
+      'itemNum': userBox.itemNum,
+      'items': [],
+      'warningNum': 0,
+      'trashNum': 0,
+      'lostNum': 0,
     };
     if (userBoxSnapshot.exists == true) {
       throw UserBoxRepositoryException('already-exist');
@@ -41,36 +50,65 @@ class UserBoxRepository {
       await userBoxesRef!.doc(userBox.uid).set(userBoxDoc);
     }
   }
-  Future<void> deleteUserBox(String uid) async{
-      DocumentReference userBoxRef = userBoxesRef!.doc(uid);
-      userBoxRef.delete();
+
+  Future<void> deleteUserBox(String uid) async {
+    DocumentReference userBoxRef = userBoxesRef!.doc(uid);
+    userBoxRef.delete();
   }
-  Future<void> editItemNum(String uid, int num) async{
+  //will be deleted soon
+  Future<void> editItemNum(String uid, int num) async {
     DocumentSnapshot userBoxSnapshot = await userBoxesRef!.doc(uid).get();
-    if(userBoxSnapshot.exists==false) throw UserBoxRepositoryException('no-userbox');
+    if (userBoxSnapshot.exists == false)
+      throw UserBoxRepositoryException('no-userbox');
     int numPast = userBoxSnapshot.get('itemNum');
-    await userBoxesRef!.doc(uid).update({'itemNum':(numPast+num)});
+    await userBoxesRef!.doc(uid).update({'itemNum': (numPast + num)});
   }
-  Future<void> addItems(String uid,String itemID) async{
+
+  Future<void> updateUserStats(String uid) async {
+    DocumentReference userBoxRef = await userBoxesRef!.doc(uid);
+    if ((await userBoxRef.get()).exists == false)
+      throw UserBoxRepositoryException('no-userbox');
+    int warningNum = (await (userBoxesRef!
+                .doc(uid)
+                .collection('items')
+                .where("itemType", isEqualTo: "warning"))
+            .get())
+        .size;
+    int trashNum = (await (userBoxesRef!
+                .doc(uid)
+                .collection('items')
+                .where("itemType", isEqualTo: "trash"))
+            .get())
+        .size;
+    int lostNum = (await (userBoxesRef!
+                .doc(uid)
+                .collection('items')
+                .where("itemType", isEqualTo: "lost"))
+            .get())
+        .size;
+    await userBoxRef.update(
+        {'warningNum': warningNum, 'trashNum': trashNum, 'lostNum': lostNum});
+  }
+
+  Future<void> addItems(String uid, String itemID) async {
     await userBoxesRef!.doc(uid).update({
-      'itemList':FieldValue.arrayUnion([itemID])
+      'itemList': FieldValue.arrayUnion([itemID])
     });
   }
-  Future<void> deleteItems(String uid,String itemID) async{
+
+  Future<void> deleteItems(String uid, String itemID) async {
     await userBoxesRef!.doc(uid).update({
-      'itemList':FieldValue.arrayRemove([itemID])
+      'itemList': FieldValue.arrayRemove([itemID])
     });
   }
-  Future<UserBox> getUserBox(String uid) async{
-      DocumentSnapshot userBoxSnapshot = 
-        await userBoxesRef!
-          .doc(uid)
-          .get();
-      if(userBoxSnapshot.exists==false) throw UserBoxRepositoryException('no-userbox');
-      return UserBox(
-        userBoxSnapshot.get('uid'),
-        userBoxSnapshot.get('itemNum'),
-        userBoxSnapshot.get('items').cast<String>()
-      );
+
+  Future<UserBox> getUserBox(String uid) async {
+    DocumentSnapshot userBoxSnapshot = await userBoxesRef!.doc(uid).get();
+    if (userBoxSnapshot.exists == false)
+      throw UserBoxRepositoryException('no-userbox');
+    return UserBox(userBoxSnapshot.get('uid'), userBoxSnapshot.get('itemNum'),
+        userBoxSnapshot.get('items').cast<String>(),
+        userBoxSnapshot.get('warningNum'),userBoxSnapshot.get('trashNum'),
+        userBoxSnapshot.get('lostNum'));
   }
 }
