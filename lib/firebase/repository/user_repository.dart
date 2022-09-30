@@ -21,11 +21,12 @@ class UserRepositoryException {
 }
 
 class UserRepository {
-  Future<void> addUser(User user, String password) async {
+  Future<String> addUser(User user, String password) async {
     try {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: user.email, password: password);
+      print(1);
       if (credential.user == null)
         throw UserRepositoryException("no-user");
       else
@@ -68,6 +69,7 @@ class UserRepository {
         .collection("user")
         .doc(user.uid)
         .set(userDoc);
+    return user.uid;
   }
 
   //delete currentUser
@@ -163,6 +165,10 @@ class UserRepository {
   }
 
   Future<void> requestPasswordReset(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch(e){
+      throw UserRepositoryException('no-email');
+    }
   }
 }
