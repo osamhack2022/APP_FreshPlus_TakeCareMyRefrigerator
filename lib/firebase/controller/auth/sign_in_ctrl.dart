@@ -1,4 +1,4 @@
-import '../repository/user_repository.dart';
+import '/firebase/repository/user_repository.dart';
 import '../ctrl_exception.dart';
 
 /*
@@ -8,7 +8,7 @@ It can throw error code ["no-user","wrong-password","firebase-error","unknown-er
 */
 Future<String> signIn(String email, String password) async {
     try{
-        return await UserRepository.requestLogIn(email,password);
+        return await UserRepository().requestLogIn(email,password);
     } on UserRepositoryException catch(e){
       throw CtrlException(e.code);
     }

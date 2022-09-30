@@ -1,6 +1,7 @@
-import '../repository/user_repository.dart';
-import '../repository/unit_repository.dart';
-import '../repository/fridge_repository.dart';
+import '/firebase/repository/user_repository.dart';
+import '/firebase/repository/unit_repository.dart';
+import '/firebase/repository/fridge_repository.dart';
+import '/firebase/repository/user_box_repository.dart';
 import '../ctrl_exception.dart';
 
 String admin_email = "admin";
@@ -35,6 +36,7 @@ Future<String> signUp(
   String fridgeID, 
   String userType) 
 async {
+  String uid;
   UserType type = UserType.user;
   //Validity Check
   UserRepository repo = UserRepository();
@@ -66,7 +68,7 @@ async {
     } on FridgeRepositoryException catch(e){
       CtrlException(e.code);
     } catch (e){  
-      CtrlException(e.code);
+      CtrlException("unknown-error");
     }
   }
   else{
@@ -78,13 +80,13 @@ async {
     } on FridgeRepositoryException catch(e){
       CtrlException(e.code);
     } catch (e){  
-      CtrlException(e.code);
+      CtrlException("unknown-error");
     }
   }
   repo.requestLogOut();
 
   try{
-    String uid = await repo.addUser(
+    uid = await repo.addUser(
       User(
         "",
         email,
@@ -131,14 +133,14 @@ async {
     }
   } on UserRepositoryException catch(e){
     throw CtrlException(e.code);
-  }on UnitRepositoryExcception catch(e){
+  }on UnitRepositoryException catch(e){
     throw CtrlException(e.code);
   } on FridgeRepositoryException catch(e){
     throw CtrlException(e.code);
-  } on UserBoxRepositoryException(e.code){
+  } on UserBoxRepositoryException catch(e){
     throw CtrlException(e.code);
   } catch(e){
-    throw CctrlException('unknown-error');
+    throw CtrlException('unknown-error');
   }
   return uid;
 }
