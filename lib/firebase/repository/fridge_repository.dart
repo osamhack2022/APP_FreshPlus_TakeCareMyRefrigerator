@@ -109,9 +109,14 @@ class FridgeRepository {
       'users': FieldValue.arrayRemove([uid])
     });
   }
-
+  Future<bool> existFridge(String fridgeID) async{
+    DocumentSnapshot fridgeSnapshot = await fridgesRef!.doc(fridgeID).get();
+    if(fridgeSnapshot.exists==true) return true;
+    else return false;
+  }
   Future<Fridge> getFridge(String fridgeID) async {
     DocumentSnapshot fridgeSnapshot = await fridgesRef!.doc(fridgeID).get();
+    if(fridgeSnapshot.exists==false) throw FridgeRepositoryException('no-fridge');
     return Fridge(
       fridgeSnapshot.get('fridgeID'),
       fridgeSnapshot.get('fridgeName'),
