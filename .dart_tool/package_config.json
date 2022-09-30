@@ -183,7 +183,7 @@
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.5",
+      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.13"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.0",
+      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -243,9 +243,9 @@
     },
     {
       "name": "stream_channel",
-      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0",
+      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "string_scanner",
@@ -261,9 +261,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.12",
+      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.14",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "typed_data",
@@ -273,7 +273,7 @@
     },
     {
       "name": "vector_math",
-      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.2",
+      "rootUri": "file:///home/codespace/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -287,10 +287,10 @@
       "name": "helloworld",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-09-25T09:12:52.609444Z",
+  "generated": "2022-09-30T01:54:48.343384Z",
   "generator": "pub",
-  "generatorVersion": "2.18.1"
+  "generatorVersion": "2.19.0-255.0.dev"
 }
