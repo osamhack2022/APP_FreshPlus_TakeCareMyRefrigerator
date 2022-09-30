@@ -112,6 +112,7 @@ class FridgeRepository {
 
   Future<Fridge> getFridge(String fridgeID) async {
     DocumentSnapshot fridgeSnapshot = await fridgesRef!.doc(fridgeID).get();
+    if(fridgeSnapshot.exists==false) throw FridgeRepositoryException('no-fridge');
     return Fridge(
       fridgeSnapshot.get('fridgeID'),
       fridgeSnapshot.get('fridgeName'),

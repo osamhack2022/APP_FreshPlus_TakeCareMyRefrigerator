@@ -111,6 +111,7 @@ class UnitRepository {
   Future<Unit> getUnit(String unitID) async {
     DocumentSnapshot unitSnapshot =
         await FirebaseFirestore.instance.collection('unit').doc(unitID).get();
+    if(unitSnapshot.exists==false) throw UnitRepositoryException('no-unit');
     return Unit(
         unitSnapshot.get('unitID'),
         unitSnapshot.get('unitName'),
