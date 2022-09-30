@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'components/custom_form.dart';
-import 'components/pages/login_page.dart';
+import 'components/login_page_folder/custom_form.dart';
+import 'components/login_page_folder/login_page.dart';
 import 'package:flutter/material.dart';
-import 'components/pages/intro_splash.dart';
-import 'components/init.dart';
+import 'components/general/intro_splash.dart';
+import 'components/general/init.dart';
 import 'package:logger/logger.dart';
 
 var logger = Logger(

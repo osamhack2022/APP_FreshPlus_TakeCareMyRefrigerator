@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../custom_form.dart';
+import '/custom_form.dart';
 import 'package:flutter/material.dart';
-import '../homepage_logo.dart';
+import '/homepage_logo.dart';
+
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
