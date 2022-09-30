@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import '../login_page.dart';
-class SignupButton_page extends StatelessWidget {
+import 'package:get/get.dart';
+import '../login_page/login_page.dart';
+
+class SignupButton_page extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container();
-    }
+  State<SignupButton_page> createState() => _SignupButtonState();
 }
 
-class SignupButton extends StatefulWidget {
-  @override
-  State<SignupButton> createState() => _SignupButtonState();
-}
-
-class _SignupButtonState extends State<SignupButton> {
+class _SignupButtonState extends State<SignupButton_page> {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle style = ElevatedButton.styleFrom(
@@ -27,8 +22,7 @@ class _SignupButtonState extends State<SignupButton> {
         child: ElevatedButton(
           style: style,
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => LoginPage()));
+            Get.to(LoginPage());
           },
           child: Text("회원가입"),
         ),

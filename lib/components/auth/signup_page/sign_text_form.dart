@@ -1,6 +1,5 @@
 // name, email, armyCode, password Textflied
 import 'package:flutter/material.dart';
-import '../main.dart';
 
 class SignTextForm extends StatefulWidget {
   const SignTextForm({Key? key}) : super(key: key);
