@@ -26,6 +26,7 @@ class UserRepository {
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: user.email, password: password);
+      print(1);
       if (credential.user == null)
         throw UserRepositoryException("no-user");
       else

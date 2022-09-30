@@ -4,8 +4,8 @@ import '/firebase/repository/fridge_repository.dart';
 import '/firebase/repository/user_box_repository.dart';
 import '../ctrl_exception.dart';
 
-String admin_email = "admin";
-String admin_password = "adminadmin";
+String adminEmail = "admin@admin.io";
+String adminPassword = "adminadmin";
 /*
 Future<List<String>> getFridgeList
 It requests FridgeList List<String> on unitID
@@ -16,9 +16,8 @@ Future<List<String>> getFridgeList(String unitID) async {
   try{
     UserRepository repo = UserRepository();
     UnitRepository unit_repo = UnitRepository();
-    await repo.requestLogIn(admin_email,admin_password);
+    await repo.requestLogIn(adminEmail,adminPassword);
     Unit unit = await unit_repo.getUnit(unitID);
-    repo.requestLogOut();
     return unit.fridges;
   } on UserRepositoryException catch(e){
     throw CtrlException(e.code);
@@ -44,47 +43,53 @@ async {
   FridgeRepository fridge_repo = FridgeRepository(unitID);
   fridge_repo.init();
   try{
-    await repo.requestLogIn(admin_email,admin_password);
+    await repo.requestLogIn(adminEmail,adminPassword);
   } on UserRepositoryException catch(e){
     CtrlException(e.code);
   }
   if(userType=="master"){
     try{
       type = UserType.master;
-      await unit_repo.getUnit(unitID);
-      throw CtrlException("unit-exist");
-    } on UnitRepositoryException catch(e){
-      if(e.code!='no-unit') throw CtrlException("unknown-error");
+      if((await unit_repo.existUnit(unitID))==true){
+        await repo.requestLogOut();
+        throw CtrlException('unit-exists');
+      }
+    } catch(e){
+      await repo.requestLogOut();
+      throw CtrlException('unknown-error');
     }
   }
   else if(userType=="manager"){
     try{
       type = UserType.manager;
-      await unit_repo.getUnit(unitID);
+      if((await unit_repo.existUnit(unitID))==false){
+        throw CtrlException('no-unit');
+      }
       Fridge fridge = await fridge_repo.getFridge(fridgeID);
+      await repo.requestLogOut();
       if(fridge.manager!="") throw CtrlException('manager-exist');
-    } on UnitRepositoryException catch(e){
-      CtrlException(e.code);
     } on FridgeRepositoryException catch(e){
-      CtrlException(e.code);
+      await repo.requestLogOut();
+      throw CtrlException(e.code);
     } catch (e){  
-      CtrlException("unknown-error");
+      await repo.requestLogOut();
+      throw CtrlException("unknown-error");
     }
   }
   else{
     try{
-      await unit_repo.getUnit(unitID);
-      await fridge_repo.getFridge(fridgeID);
-    } on UnitRepositoryException catch(e){
-      CtrlException(e.code);
-    } on FridgeRepositoryException catch(e){
-      CtrlException(e.code);
+      if((await unit_repo.existUnit(unitID))==false){
+        throw CtrlException('no-unit');
+      }
+      if((await fridge_repo.existFridge(unitID))==false){
+        throw CtrlException('no-fridge');
+      }
+      await repo.requestLogOut();
     } catch (e){  
+      await repo.requestLogOut();
       CtrlException("unknown-error");
     }
   }
-  repo.requestLogOut();
-
   try{
     uid = await repo.addUser(
       User(
@@ -116,12 +121,23 @@ async {
     else if(userType=="manager"){
       //editManager
       await fridge_repo.editManager(fridgeID,uid);
+      UserBoxRepository userboxRepo = UserBoxRepository(unitID,fridgeID);
+      userboxRepo.init();
+      await userboxRepo.addUserBox(UserBox(
+        uid,
+        0,
+        [],
+        0,
+        0,
+        0
+      ));
     }
     else{
       //addUsers
       await fridge_repo.addUsers(fridgeID,uid);
       //addUserBox
       UserBoxRepository userboxRepo = UserBoxRepository(unitID,fridgeID);
+      userboxRepo.init();
       await userboxRepo.addUserBox(UserBox(
         uid,
         0,

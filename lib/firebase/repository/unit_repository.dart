@@ -107,11 +107,16 @@ class UnitRepository {
       'fridges': FieldValue.arrayRemove([fridgeID])
     });
   }
-
+  Future<bool> existUnit(String unitID) async {
+    DocumentSnapshot unitSnapshot =
+        await FirebaseFirestore.instance.collection('unit').doc(unitID).get();
+    if(unitSnapshot.exists==true) return true;
+    else return false;
+  }
   Future<Unit> getUnit(String unitID) async {
     DocumentSnapshot unitSnapshot =
         await FirebaseFirestore.instance.collection('unit').doc(unitID).get();
-    if(unitSnapshot.exists==false) throw UnitRepositoryException('no-unit');
+    if(unitSnapshot.exists==false) throw UnitRepositoryException('unit-exists');
     return Unit(
         unitSnapshot.get('unitID'),
         unitSnapshot.get('unitName'),
