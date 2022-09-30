@@ -1,10 +1,9 @@
-import '../main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../sign_text_form.dart';
-import '../dropdownbutton_page.dart';
-import '../checkbox.dart';
-import '../signupButton.dart'
+import 'sign_text_form.dart';
+import 'dropdownbutton_page.dart';
+import 'checkbox_page.dart';
+import 'signupButton.dart';
 
 class SignupPage extends StatelessWidget{
     @override

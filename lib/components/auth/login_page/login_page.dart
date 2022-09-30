@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'login_form.dart';
 import 'package:flutter/material.dart';
 import '../general/homepage_logo.dart';
+import 'package:get/get.dart';
+import '../signup_page/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -72,10 +74,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => LoginPage()));
+                                    Get.to(SignupPage());
                                   }
                                 },
                                 child: const Text(
