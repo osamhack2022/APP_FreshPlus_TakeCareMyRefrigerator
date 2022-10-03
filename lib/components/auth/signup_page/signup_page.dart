@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'sign_text_form.dart';
-import 'dropdownbutton_page.dart';
-import 'checkbox_page.dart';
-import 'signupButton.dart';
 
 class SignupPage extends StatelessWidget {
   @override
@@ -34,13 +31,6 @@ class SignupPage extends StatelessWidget {
               SignTextForm(),
 
               //냉장고, 회원유형 DropdownButton 클래스
-              Dropdownbutton_page(),
-              SizedBox(height: 15),
-
-              Checkbox_page(),
-              SizedBox(height: 20),
-              SignupButton_page(),
-              SizedBox(height: 20),
             ],
           ),
         ),

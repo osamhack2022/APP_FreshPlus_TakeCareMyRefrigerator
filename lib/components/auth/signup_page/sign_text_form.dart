@@ -1,6 +1,7 @@
 // name, email, armyCode, password Textflied
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:helloworld/firebase/controller/ctrl_exception.dart';
 import '../login_page/login_page.dart';
 import '/firebase/controller/auth/sign_up_ctrl.dart';
 
@@ -10,20 +11,21 @@ class SignTextForm extends StatefulWidget {
 }
 
 class _SignTextFormState extends State<SignTextForm> {
-  final List<String> refrigerator_list = <String>[
+  /*final List<String> refrigerator_list = <String>[
     '냉장고1',
     '냉장고2',
     '냉장고3',
     '냉장고4'
-  ];
+  ];*/
   final List<String> member_list = <String>['user', 'manager', 'master'];
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final armyCodeController = TextEditingController();
   final passwordController = TextEditingController();
-  String? fridge;
-  String? userType;
+  List<String> refrigerator_list = [];
+  String fridge = "냉장고1";
+  String userType = "master";
   bool isChecked = false;
 
   @override
@@ -51,6 +53,7 @@ class _SignTextFormState extends State<SignTextForm> {
             const SizedBox(height: 15.0),
             passwordForm(),
             const SizedBox(height: 17.0),
+            unitIDForm(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -267,12 +270,25 @@ class _SignTextFormState extends State<SignTextForm> {
             borderSide: BorderSide(width: 1, color: Colors.white),
           ),
         ),
+        value: userType,
         elevation: 13,
         style: const TextStyle(color: Colors.black),
-        onChanged: (String? value) {
+        onChanged: (String? value) async {
           setState(() {
             userType = value!;
           });
+          try {
+            if (value != "master") {
+              if (armyCodeController.text.trim() != "") {
+                refrigerator_list =
+                    await getFridgeList(armyCodeController.text.trim());
+                if (refrigerator_list.length > 0) fridge = refrigerator_list[0];
+              }
+            }
+            print(refrigerator_list);
+          } on CtrlException catch (e) {
+            print(e.code);
+          }
         },
         items: member_list.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
@@ -285,26 +301,31 @@ class _SignTextFormState extends State<SignTextForm> {
   }
 
   dropFridge() {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(width: 1, color: Colors.white),
+    return SizedBox(
+      width: 120,
+      child: DropdownButtonFormField<String>(
+        disabledHint: Text("냉장고 없음"),
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(width: 1, color: Colors.white),
+          ),
         ),
+        value: fridge,
+        elevation: 13,
+        style: const TextStyle(color: Colors.black),
+        onChanged: refrigerator_list != []
+            ? (value) => setState(() {
+                  fridge = value!;
+                })
+            : null,
+        items: refrigerator_list.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
       ),
-      elevation: 13,
-      style: const TextStyle(color: Colors.black),
-      onChanged: (String? value) {
-        setState(() {
-          fridge = value!;
-        });
-      },
-      items: refrigerator_list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
     );
   }
 
@@ -383,13 +404,23 @@ class _SignTextFormState extends State<SignTextForm> {
           style: style,
           onPressed: () async {
             //where is validator?
-            await signUp(
-              emailController.text.trim(), 
-              passwordController.text.trim(),
-              nameController.text.trim(), 
-              armyCodeController.text.trim(), 
-              fridge!, userType!);
-            Get.to(LoginPage());
+            try {
+              await signUp(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                  nameController.text.trim(),
+                  armyCodeController.text.trim(),
+                  fridge!,
+                  userType!);
+              print('Successfully Signed Up');
+              Get.to(LoginPage());
+            } on CtrlException catch (e) {
+              if (e.code == "user-exist") {
+              } else if (e.code == "no-fridge") {
+              } else if (e.code == "no-unit") {
+              } else if (e.code == "manager-exist") {
+              } else if (e.code == "unit-exist") {}
+            }
           },
           child: Text("회원가입"),
         ),
