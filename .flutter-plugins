@@ -1,7 +1,0 @@
-# This is a generated file; do not edit or check into version control.
-cloud_firestore=/home/codespace/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.5.0/
-cloud_firestore_web=/home/codespace/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.8.9/
-firebase_auth=/home/codespace/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.11.0/
-firebase_auth_web=/home/codespace/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-4.6.0/
-firebase_core=/home/codespace/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.24.0/
-firebase_core_web=/home/codespace/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.7.3/
